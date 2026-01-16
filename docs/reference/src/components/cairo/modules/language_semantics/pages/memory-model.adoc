@@ -51,6 +51,26 @@ Snapshots represent taking a value at a snapshot:
   value is permitted; otherwise desnap requires a `Snapshot(T)` or proceeds via deref-like logic
   when available.
 
+[source,cairo]
+----
+#[derive(Copy, Drop)]
+struct MyStruct {
+    a: u128
+}
+
+fn main() {
+    let x = MyStruct { a: 10_u128 };
+
+    // Create a snapshot of x. `y` is of type `@MyStruct`.
+    let y = @x;
+
+    // Desnap `y` to get the value. This is allowed because MyStruct has the Copy trait.
+    let z = *y;
+
+    assert(x.a == z.a, 'Values should be equal');
+}
+----
+
 In the semantic analysis:
 
 - Creating a snapshot produces `Snapshot(T)` as the type of the expression.
